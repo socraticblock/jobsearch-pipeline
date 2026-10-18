@@ -4,6 +4,7 @@ These tests build the sdist and wheel, install each in a fresh virtualenv,
 and verify that the installed commands work outside the source checkout.
 """
 
+import os
 import shutil
 import subprocess
 import sys
@@ -57,11 +58,14 @@ class TestIsolatedInstall(unittest.TestCase):
         return python
 
     def _run(self, python, *args):
+        env = dict(os.environ)
+        env["PYTHONPATH"] = ""
         return subprocess.run(
             [str(python), "-m", "jobsearch.cli", *args],
             capture_output=True,
             text=True,
             cwd="/tmp",
+            env=env,
         )
 
     def test_wheel_help(self):
