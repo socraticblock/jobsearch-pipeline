@@ -58,14 +58,11 @@ class TestIsolatedInstall(unittest.TestCase):
         return python
 
     def _run(self, python, *args):
-        env = dict(os.environ)
-        env["PYTHONPATH"] = ""
         return subprocess.run(
-            [str(python), "-m", "jobsearch.cli", *args],
+            [str(python), "-I", "-m", "jobsearch.cli", *args],
             capture_output=True,
             text=True,
             cwd="/tmp",
-            env=env,
         )
 
     def test_wheel_help(self):
