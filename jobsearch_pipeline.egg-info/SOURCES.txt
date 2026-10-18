@@ -12,8 +12,10 @@ jobsearch/ingest.py
 jobsearch/merge_candidates.py
 jobsearch/normalize.py
 jobsearch/notify.py
+jobsearch/onboard.py
 jobsearch/parse_alert.py
 jobsearch/render_html.py
+jobsearch/render_pdf.py
 jobsearch/requirements.py
 jobsearch/rule_why.py
 jobsearch/rules.py
