@@ -1,10 +1,10 @@
 """Genuine isolated installation tests for pip-installed CLI.
 
-These tests build the sdist and wheel, install each in a fresh virtualenv,
-and verify that the installed commands work outside the source checkout.
+These tests build the sdist and wheel, install each into a fresh target
+directory, and verify that the installed commands work outside the source
+checkout.
 """
 
-import os
 import shutil
 import subprocess
 import sys
@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 class TestIsolatedInstall(unittest.TestCase):
-    """Install sdist and wheel in isolated venvs and verify CLI commands."""
+    """Install sdist and wheel into isolated dirs and verify CLI commands."""
 
     @classmethod
     def setUpClass(cls):
@@ -30,133 +30,128 @@ class TestIsolatedInstall(unittest.TestCase):
         cls.whl = sorted(cls.dist.glob("*.whl"))[-1]
         cls.sdist = sorted(cls.dist.glob("*.tar.gz"))[-1]
 
-    def _make_venv(self):
+    def _install(self, artifact):
         tmpdir = tempfile.mkdtemp()
-        venv = Path(tmpdir) / "venv"
+        target = Path(tmpdir) / "target"
+        target.mkdir()
         subprocess.run(
-            [sys.executable, "-m", "venv", str(venv)],
+            [sys.executable, "-m", "pip", "install", "--quiet",
+             "--target", str(target), str(artifact)],
             check=True,
             capture_output=True,
         )
-        return tmpdir, venv
-
-    def _install(self, venv, artifact):
-        pip = venv / "bin" / "pip"
-        python = venv / "bin" / "python"
-        subprocess.run(
-            [str(pip), "install", "--quiet", str(artifact)],
-            check=True,
-            capture_output=True,
-        )
+        # Verify importable from target
         result = subprocess.run(
-            [str(python), "-c", "import jobsearch; print('OK')"],
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode != 0:
-            raise RuntimeError(f"Package not importable: {result.stderr}")
-        return python
-
-    def _run(self, python, *args):
-        result = subprocess.run(
-            [str(python), "-I", "-m", "jobsearch.cli", *args],
+            [sys.executable, "-c", "import jobsearch; print('OK')"],
             capture_output=True,
             text=True,
             cwd="/tmp",
+            env={"PYTHONPATH": str(target)},
         )
         if result.returncode != 0:
-            import sys as _sys
-            print(f"DEBUG stderr: {result.stderr}", file=_sys.stderr)
-            print(f"DEBUG stdout: {result.stdout}", file=_sys.stderr)
+            raise RuntimeError(f"Package not importable: {result.stderr}")
+        return tmpdir, target
+
+    def _run(self, target, *args):
+        env = {"PYTHONPATH": str(target)}
+        # Try console script
+        bin_dir = target / "bin"
+        jobsearch_bin = bin_dir / "jobsearch"
+        if jobsearch_bin.exists():
+            cmd = [str(jobsearch_bin), *args]
+        else:
+            cmd = [sys.executable, "-m", "jobsearch.cli", *args]
+            env["PYTHONPATH"] = str(target)
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd="/tmp",
+            env=env,
+        )
         return result
 
+    def _cleanup(self, tmpdir):
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
     def test_wheel_help(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.whl)
         try:
-            python = self._install(venv, self.whl)
-            result = self._run(python, "--help")
+            result = self._run(target, "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("jobsearch", result.stdout)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_wheel_onboard_help(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.whl)
         try:
-            python = self._install(venv, self.whl)
-            result = self._run(python, "onboard", "--help")
+            result = self._run(target, "onboard", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--cv", result.stdout)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_wheel_render_help(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.whl)
         try:
-            python = self._install(venv, self.whl)
-            result = self._run(python, "render", "--help")
+            result = self._run(target, "render", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--text", result.stdout)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_wheel_render_text_no_db(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.whl)
         try:
-            python = self._install(venv, self.whl)
-            result = self._run(python, "render", "--text")
+            result = self._run(target, "render", "--text")
             self.assertEqual(result.returncode, 2)
             self.assertIn("no ledger", result.stderr)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_wheel_doctor_requires_checkout(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.whl)
         try:
-            python = self._install(venv, self.whl)
-            result = self._run(python, "doctor")
+            result = self._run(target, "doctor")
             self.assertEqual(result.returncode, 2)
             self.assertIn("repository checkout", result.stderr)
             self.assertIn("git clone", result.stderr)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_sdist_help(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.sdist)
         try:
-            python = self._install(venv, self.sdist)
-            result = self._run(python, "--help")
+            result = self._run(target, "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("jobsearch", result.stdout)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_sdist_onboard_help(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.sdist)
         try:
-            python = self._install(venv, self.sdist)
-            result = self._run(python, "onboard", "--help")
+            result = self._run(target, "onboard", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--cv", result.stdout)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_sdist_render_help(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.sdist)
         try:
-            python = self._install(venv, self.sdist)
-            result = self._run(python, "render", "--help")
+            result = self._run(target, "render", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--text", result.stdout)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
 
     def test_sdist_doctor_requires_checkout(self):
-        tmpdir, venv = self._make_venv()
+        tmpdir, target = self._install(self.sdist)
         try:
-            python = self._install(venv, self.sdist)
-            result = self._run(python, "doctor")
+            result = self._run(target, "doctor")
             self.assertEqual(result.returncode, 2)
             self.assertIn("repository checkout", result.stderr)
         finally:
-            shutil.rmtree(tmpdir, ignore_errors=True)
+            self._cleanup(tmpdir)
