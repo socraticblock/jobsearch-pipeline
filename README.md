@@ -282,5 +282,5 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for t
 
 Extracted from a private working copy. `tools/google/setup.py` is a vendored copy
 of the `google-workspace` Hermes skill (MIT, Nous Research) with the scope list
-narrowed; the other files here were written for this project. `MANIFEST.txt`
-records a sha256 for every shipped file.
+narrowed; the other files here were written for this project. `MANIFEST.txt` is no longer shipped; integrity is verified via
+the export gate and OpenReady scans.

@@ -6,13 +6,16 @@ their original licenses.
 
 ## Nous Research — Google Workspace skill
 
-- **Files:** `tools/google/setup.py` (vendored copy)
+- **Files:**
+  - `tools/google/setup.py` (vendored copy)
+  - `tools/google/_hermes_home.py` (vendored copy)
 - **Upstream origin:** Nous Research Hermes Agent — `google-workspace` skill
 - **Upstream repository:** https://github.com/NousResearch/hermes-agent
 - **License:** MIT
 - **Original copyright:** Copyright (c) 2025 Nous Research
-- **Modifications:** Scope list narrowed to project requirements; adapted
-  for standalone use without Hermes Agent runtime.
+- **Modifications:**
+  - `setup.py`: Scope list narrowed to project requirements; adapted for standalone use without Hermes Agent runtime.
+  - `_hermes_home.py`: Standalone fallback for HERMES_HOME resolution; no modifications to core logic.
 - **Full license text:**
 
 ```

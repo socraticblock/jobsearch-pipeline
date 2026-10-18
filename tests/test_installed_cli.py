@@ -1,8 +1,7 @@
-"""Integration tests for pip-installed CLI behavior.
+"""Genuine isolated installation tests for pip-installed CLI.
 
-These tests verify that the package works correctly when installed via pip,
-not just from a source checkout. They are skipped when running from a source
-checkout without an installed package.
+These tests build the sdist and wheel, install each in a fresh virtualenv,
+and verify that the installed commands work outside the source checkout.
 """
 
 import shutil
@@ -13,49 +12,145 @@ import unittest
 from pathlib import Path
 
 
-class TestInstalledCLI(unittest.TestCase):
-    """Test that jobsearch CLI works after pip installation."""
+class TestIsolatedInstall(unittest.TestCase):
+    """Install sdist and wheel in isolated venvs and verify CLI commands."""
 
-    def test_help(self):
-        result = subprocess.run(
-            [sys.executable, "-m", "jobsearch.cli", "--help"],
-            capture_output=True, text=True,
-        )
-        self.assertEqual(result.returncode, 0)
-        self.assertIn("jobsearch", result.stdout)
-
-    def test_onboard_help(self):
-        result = subprocess.run(
-            [sys.executable, "-m", "jobsearch.cli", "onboard", "--help"],
-            capture_output=True, text=True,
-        )
-        self.assertEqual(result.returncode, 0)
-        self.assertIn("--cv", result.stdout)
-
-    def test_render_help(self):
-        result = subprocess.run(
-            [sys.executable, "-m", "jobsearch.cli", "render", "--help"],
-            capture_output=True, text=True,
-        )
-        self.assertEqual(result.returncode, 0)
-        self.assertIn("--text", result.stdout)
-
-    def test_doctor_requires_checkout(self):
-        """doctor should exit 2 when tools/doctor.py is absent (pip install)."""
-        # This test only makes sense when running from an installed package
-        # without a source checkout. In a source checkout, doctor runs normally.
-        pass
-
-    def test_render_text_without_pdf_deps(self):
-        """render --text should work even without reportlab installed."""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            db_path = Path(tmpdir) / "jobs.db"
-            # Create an empty DB (will fail at collect, but tests the path)
-            result = subprocess.run(
-                [sys.executable, "-m", "jobsearch.cli", "render", "--text",
-                 "--db", str(db_path), "--out", str(Path(tmpdir) / "out.txt")],
-                capture_output=True, text=True,
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).resolve().parents[1]
+        cls.dist = cls.root / "dist"
+        if not list(cls.dist.glob("*.whl")) or not list(cls.dist.glob("*.tar.gz")):
+            subprocess.run(
+                [sys.executable, "-m", "build"],
+                cwd=str(cls.root),
+                check=True,
+                capture_output=True,
             )
-            # Should not crash with ImportError; may fail because DB doesn't exist
-            self.assertNotIn("ImportError", result.stderr)
-            self.assertNotIn("ModuleNotFoundError", result.stderr)
+        cls.whl = sorted(cls.dist.glob("*.whl"))[-1]
+        cls.sdist = sorted(cls.dist.glob("*.tar.gz"))[-1]
+
+    def _make_venv(self):
+        tmpdir = tempfile.mkdtemp()
+        venv = Path(tmpdir) / "venv"
+        subprocess.run(
+            [sys.executable, "-m", "venv", str(venv)],
+            check=True,
+            capture_output=True,
+        )
+        return tmpdir, venv
+
+    def _install(self, venv, artifact):
+        pip = venv / "bin" / "pip"
+        python = venv / "bin" / "python"
+        subprocess.run(
+            [str(pip), "install", "--quiet", str(artifact)],
+            check=True,
+            capture_output=True,
+        )
+        result = subprocess.run(
+            [str(python), "-c", "import jobsearch; print('OK')"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"Package not importable: {result.stderr}")
+        return python
+
+    def _run(self, python, *args):
+        return subprocess.run(
+            [str(python), "-m", "jobsearch.cli", *args],
+            capture_output=True,
+            text=True,
+            cwd="/tmp",
+        )
+
+    def test_wheel_help(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.whl)
+            result = self._run(python, "--help")
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("jobsearch", result.stdout)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_wheel_onboard_help(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.whl)
+            result = self._run(python, "onboard", "--help")
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("--cv", result.stdout)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_wheel_render_help(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.whl)
+            result = self._run(python, "render", "--help")
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("--text", result.stdout)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_wheel_render_text_no_db(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.whl)
+            result = self._run(python, "render", "--text")
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("no ledger", result.stderr)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_wheel_doctor_requires_checkout(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.whl)
+            result = self._run(python, "doctor")
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("repository checkout", result.stderr)
+            self.assertIn("git clone", result.stderr)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_sdist_help(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "--help")
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("jobsearch", result.stdout)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_sdist_onboard_help(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "onboard", "--help")
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("--cv", result.stdout)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_sdist_render_help(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "render", "--help")
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("--text", result.stdout)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def test_sdist_doctor_requires_checkout(self):
+        tmpdir, venv = self._make_venv()
+        try:
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "doctor")
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("repository checkout", result.stderr)
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)

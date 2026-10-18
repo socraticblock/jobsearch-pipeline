@@ -217,19 +217,10 @@ OPTIONAL_INCLUDE = [
 # source-completeness check consults SOURCE_EXCLUDE so it does not flag
 # the very files it is designed to keep out of the artifact.
 EXCLUDE = {
-    "profile/profile.yaml": "the owner's real candidate profile (salary floor, history)",
-    "profile/targets.yaml": "an earlier personal inference, superseded",
-    "PLAN.md": "internal plan, written for the owner and referencing their setup",
-    "HANDOFF.md": "session handoff containing the owner's personal specifics",
-    "phase1-audit.md": "an audit of the owner's own Hermes install",
     "var": "the job ledger (SQLite) -- real ingested data",
     "digests": "rendered shortlists -- real job data",
-    "WHAT-WE-ARE-BUILDING.md": "internal intent document with personal details",
     "pyproject.toml": "packaging metadata with repo URLs (source-only, leak-scan would block the URL)",
     ".gitignore": "the privacy guard, which makes no sense outside this workspace",
-    "tools/morning_digest.sh": "host-only cron wrapper (contains /home/<user>/ paths)",
-    "tools/__init__.py": "packaging-only marker for the wheel; the public artifact ships tools as individual files",
-    "cloud": "Cloudflare Worker; not part of the local pipeline",
     # Open-Ready scaffold (created by `openready init --adopt`):
     # bookkeeping for the open-source-readiness system, not part
     # of the public jobsearch artifact. Listed here so the source-
@@ -237,12 +228,6 @@ EXCLUDE = {
     # shipping them in the curated bundle.
     "MANIFEST.in": "build-metadata file used by `python -m build`; not part of the curated public artifact",
     "openready.project.json": "Open-Ready project contract; used by the openready CLI, not part of the curated public artifact",
-    "examples": "Open-Ready example fixtures; not part of the curated public artifact",
-    "src": "Open-Ready scaffold source dir; not part of the curated public artifact",
-    ".githooks": "Open-Ready git hooks (pre-commit etc.); not part of the curated public artifact",
-    "tests/README.md": "Open-Ready tests stub; not part of the curated public artifact",
-    "tests/test_sdist_leak_scan.py": "requires python -m build which is not available in the export bundle",
-    "tests/test_readme_count.py": "README count is for the source suite; the export bundle has fewer tests",
 }
 # Files the source-completeness check must NOT flag. The source tree is
 # allowed to contain these (they are owner data or host-only paths);
