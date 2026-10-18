@@ -41,22 +41,34 @@ class TestIsolatedInstall(unittest.TestCase):
 
     def _install(self, venv, artifact):
         pip = venv / "bin" / "pip"
+        python = venv / "bin" / "python"
         subprocess.run(
             [str(pip), "install", "--quiet", str(artifact)],
             check=True,
             capture_output=True,
         )
-        return venv / "bin" / "jobsearch"
+        result = subprocess.run(
+            [str(python), "-c", "import jobsearch; print('OK')"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"Package not importable: {result.stderr}")
+        return python
+
+    def _run(self, python, *args):
+        return subprocess.run(
+            [str(python), "-m", "jobsearch.cli", *args],
+            capture_output=True,
+            text=True,
+            cwd="/tmp",
+        )
 
     def test_wheel_help(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.whl)
-            result = subprocess.run(
-                [str(jobsearch), "--help"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.whl)
+            result = self._run(python, "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("jobsearch", result.stdout)
         finally:
@@ -65,12 +77,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_wheel_onboard_help(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.whl)
-            result = subprocess.run(
-                [str(jobsearch), "onboard", "--help"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.whl)
+            result = self._run(python, "onboard", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--cv", result.stdout)
         finally:
@@ -79,12 +87,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_wheel_render_help(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.whl)
-            result = subprocess.run(
-                [str(jobsearch), "render", "--help"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.whl)
+            result = self._run(python, "render", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--text", result.stdout)
         finally:
@@ -93,12 +97,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_wheel_render_text_no_db(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.whl)
-            result = subprocess.run(
-                [str(jobsearch), "render", "--text"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.whl)
+            result = self._run(python, "render", "--text")
             self.assertEqual(result.returncode, 2)
             self.assertIn("no ledger", result.stderr)
         finally:
@@ -107,12 +107,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_wheel_doctor_requires_checkout(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.whl)
-            result = subprocess.run(
-                [str(jobsearch), "doctor"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.whl)
+            result = self._run(python, "doctor")
             self.assertEqual(result.returncode, 2)
             self.assertIn("repository checkout", result.stderr)
             self.assertIn("git clone", result.stderr)
@@ -122,12 +118,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_sdist_help(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.sdist)
-            result = subprocess.run(
-                [str(jobsearch), "--help"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("jobsearch", result.stdout)
         finally:
@@ -136,12 +128,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_sdist_onboard_help(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.sdist)
-            result = subprocess.run(
-                [str(jobsearch), "onboard", "--help"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "onboard", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--cv", result.stdout)
         finally:
@@ -150,12 +138,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_sdist_render_help(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.sdist)
-            result = subprocess.run(
-                [str(jobsearch), "render", "--help"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "render", "--help")
             self.assertEqual(result.returncode, 0)
             self.assertIn("--text", result.stdout)
         finally:
@@ -164,12 +148,8 @@ class TestIsolatedInstall(unittest.TestCase):
     def test_sdist_doctor_requires_checkout(self):
         tmpdir, venv = self._make_venv()
         try:
-            jobsearch = self._install(venv, self.sdist)
-            result = subprocess.run(
-                [str(jobsearch), "doctor"],
-                capture_output=True,
-                text=True,
-            )
+            python = self._install(venv, self.sdist)
+            result = self._run(python, "doctor")
             self.assertEqual(result.returncode, 2)
             self.assertIn("repository checkout", result.stderr)
         finally:
