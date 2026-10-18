@@ -58,12 +58,17 @@ class TestIsolatedInstall(unittest.TestCase):
         return python
 
     def _run(self, python, *args):
-        return subprocess.run(
+        result = subprocess.run(
             [str(python), "-I", "-m", "jobsearch.cli", *args],
             capture_output=True,
             text=True,
             cwd="/tmp",
         )
+        if result.returncode != 0:
+            import sys as _sys
+            print(f"DEBUG stderr: {result.stderr}", file=_sys.stderr)
+            print(f"DEBUG stdout: {result.stdout}", file=_sys.stderr)
+        return result
 
     def test_wheel_help(self):
         tmpdir, venv = self._make_venv()
