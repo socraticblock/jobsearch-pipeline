@@ -1,0 +1,12 @@
+# The copy's own ignore file. Note this is NOT the guard from the parent
+# workspace: that one hid personal data inside a public repo, which is the
+# arrangement this bundle exists to avoid. Here there is simply nothing personal
+# to hide -- the candidate profile is not shipped.
+__pycache__/
+*.py[cod]
+var/
+digests/
+*.db
+*.sqlite3
+.env
+dist/

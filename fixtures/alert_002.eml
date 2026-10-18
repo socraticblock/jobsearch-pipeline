@@ -1,0 +1,30 @@
+From: LinkedIn Job Alerts <jobalerts-noreply@linkedin.com>
+To: candidate@example.test
+Subject: New jobs for you: Data Platform and 1 more
+Message-ID: <alert-002@linkedin.com>
+Date: Tue, 13 Oct 2026 07:00:00 +0000
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="BOUND2"
+
+--BOUND2
+Content-Type: text/plain; charset="UTF-8"
+
+Software Engineer
+Acme Systems · Dublin, Ireland
+View job: https://www.linkedin.com/comm/jobs/view/4012345678/?trackingId=zzz
+
+Data Platform Engineer
+Umbrella Data · Remote
+View job: https://www.linkedin.com/comm/jobs/view/4012345699/?trackingId=ddd
+
+--BOUND2
+Content-Type: text/html; charset="UTF-8"
+
+<html><body>
+<table>
+<tr><td><a href="https://www.linkedin.com/comm/jobs/view/4012345678/?trackingId=zzz">Software Engineer</a></td><td>Acme Systems</td><td>Dublin, Ireland</td></tr>
+<tr><td><a href="https://www.linkedin.com/comm/jobs/view/4012345699/?trackingId=ddd">Data Platform Engineer</a></td><td>Umbrella Data</td><td>Remote</td></tr>
+</table>
+</body></html>
+
+--BOUND2--

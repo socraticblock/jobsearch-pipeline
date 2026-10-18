@@ -1,0 +1,23 @@
+include README.md LICENSE
+
+prune tests
+prune tools
+prune scripts
+prune fixtures
+prune corpus
+prune profile
+prune docs
+prune design
+prune cloud
+prune .github
+prune .githooks
+prune var
+prune digests
+
+exclude MANIFEST.txt
+exclude CHANGELOG.md
+exclude CLAIMS.md
+exclude GOAL-AIRTIGHT.md
+exclude AGENTS.md
+
+global-exclude *.py[cod] .DS_Store

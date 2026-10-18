@@ -1,0 +1,234 @@
+# profile.example.yaml — TEMPLATE candidate profile for the jobsearch pipeline
+#
+# Copy this file to profile/profile.yaml and replace every value with your own.
+# The pipeline reads exactly four things from it to enforce hard rules:
+#
+#   stack[].status                -> which technologies count as HELD
+#   compensation.floor            -> the floor used for ranking and flagging
+#   location_and_arrangement.authorization.work_authorisation
+#                                 -> where you may legally work; the gate
+#                                    infers this from nothing else
+#   years_can_honestly_claim      -> the years bar the gate may judge you on
+#
+# Everything else is documentation for you and for the evaluation layer. The
+# deterministic gate does not invent values it cannot read: an absent field is
+# treated as unknown, never guessed.
+#
+# Want five fields instead of this file? Copy `profile.starter.yaml` first and
+# come back here when you want to tune the vocabulary, the profession signals
+# or the outcome wording.
+#
+# status values, and what they mean to the gate:
+#   corroborated      - you can point at evidence; counts as HELD
+#   corroborated_weak - real but thin evidence; counts as HELD
+#   private_evidence  - true but not publicly demonstrable; counts as HELD
+#   learning          - not held yet; treated as LEARNABLE (never a hard failure)
+#   aspirational      - do not claim it; treated as LEARNABLE
+#
+# HONESTY RULE (do not edit this away): independent or personal projects COUNT as
+# demonstrated experience, but must NEVER be described as salaried employment or
+# as an invented number of professional years. Say what you did, not what it
+# sounds like.
+
+identity:
+  positioning: >-
+    One or two sentences describing the work you want and what you are for.
+    Example: "Backend-leaning full-stack engineer — APIs, integrations and data
+    pipelines, with a bias toward automating what people do by hand."
+  self_description: >-
+    What you are unusually good at that a CV line does not capture.
+  experience_framing:
+    rule: >-
+      Independent projects COUNT as relevant demonstrated experience.
+      State the scope and the outcome; do not translate them into a number of
+      professional years.
+    flag: owner_stated
+
+# W3.4: profession signals. A non-English candidate adds their
+# own list at the top level here, or under
+# `location_and_arrangement:`. An empty list means the gate uses
+# its documented English default. Borrowed shape: career-ops'
+# locale tables, jobsync's per-tenant search seeds.
+# profession_signals:
+#   - "ingenieur"        # German: engineer
+#   - "entwickler"       # German: developer
+#   - "softwareentwickler"  # German: software developer
+#   - "développeur"      # French: developer
+#   - "desarrollador"    # Spanish: developer
+#   - "ingegnere"        # Italian: engineer
+# A title that contains any of these (whole-word match) is
+# classified as a software role. A title with NONE of them is
+# flagged as a non-software job (rule no_software_signal_in_title).
+# The default English list (the module constant
+# _DEFAULT_PROFESSION_SIGNALS) is unchanged; the profile only
+# EXTENDS the vocabulary, never shrinks it. If you need to
+# shrink it, omit the field and rely on the default.
+
+# Which technologies you actually hold. This list drives the gate: a requirement
+# for something you hold is SATISFIED; a requirement for an essential specialist
+# technology you do not hold is a hard failure. Keep it honest — an inflated list
+# makes the pipeline surface jobs you cannot do.
+stack:
+  - skill: TypeScript
+    status: corroborated
+    evidence: "Where the evidence is: a repo, a shipped product, client work."
+  - skill: React
+    status: corroborated
+    evidence: "…"
+  - skill: Node.js
+    status: corroborated
+    evidence: "…"
+  - skill: PostgreSQL
+    status: private_evidence
+    evidence: "Used in private client work; not publicly demonstrable."
+  - skill: Go
+    status: learning
+    evidence: "Reading and small tools; not yet production experience."
+
+# Titles you will accept. The gate does NOT discard a job merely because its
+# title differs from these — they are search seeds, not filters.
+target_titles:
+  rule: >-
+    Do not rely exclusively on these titles. Employers use different words for
+    the same job; judge the description.
+  tier1:
+    - "Backend Engineer"
+    - "Full-Stack Engineer"
+  tier2:
+    - "Integration Engineer / API Developer"
+    - "Platform Engineer"
+  tier3:
+    - "Frontend Developer (React)"
+    - "Data Engineer"
+
+attractive:
+  items:
+    - "Designing or developing real software products end to end"
+    - "Automating manual processes"
+  note: >-
+    Ordering preference, not a filter. Do not reject a conventional role merely
+    because an AI-flavoured one looks more exciting; and do not reject a role
+    for a title.
+
+deprioritize:
+  hard_avoid:
+    - "Roles requiring formal professional experience far above your record"
+    - "Specialist domains you do not hold (name them explicitly)"
+  rule: >-
+    Do not reject a role solely because it mentions a tool you do not know.
+    Distinguish a learnable secondary tool from essential specialist experience.
+
+experience_policy:
+  # years_can_honestly_claim: <integer>
+  # ------------------------------
+  # The number of years of professional experience the candidate can
+  # honestly claim. Used by the gate to evaluate postings that require
+  # "N+ years" with no flexibility. While this field is absent, the
+  # outcome for such postings is UNKNOWN (NEEDS_RESEARCH), NOT a drop
+  # -- deciding against missing evidence is exactly what this project
+  # refuses to do. As soon as the field is present, the comparison
+  # becomes deterministic: postings demanding strictly more years
+  # than this become a hard drop.
+  #
+  # DO NOT fill this in until you have decided the number you can
+  # defend in a conversation with a recruiter. The number you write
+  # here is a public contract, not a hope.
+  - >-
+    If a role explicitly requires N years of professional experience with no
+    meaningful flexibility and your record does not satisfy it, treat it as
+    unsuitable — but SURFACE it rather than hiding it: a soft failure is still
+    shown to you to decide on.
+  - >-
+    If experience is listed as preferred rather than mandatory, evaluate
+    practical project experience and transferable skills instead.
+  - >-
+    "N+ years or equivalent demonstrable experience" is NOT a failure.
+
+location_and_arrangement:
+  priority:
+    - "Your city / country"
+    - "Remote roles explicitly open to candidates based where you are"
+  office_preference: "preferable if the employer has an office near you"
+  hybrid: open
+  engagement: "full-time employment; full-time contract also acceptable"
+  authorization:
+    # Be precise here: citizenship and residence are different answers, and the
+    # gate treats them differently by design.
+    citizenship: "e.g. EU (Irish) / non-EU"
+    residence: "Where you actually live"
+    # WHERE YOU MAY LEGALLY WORK, written down. This list is the only source
+    # the gate reads for a work authorisation -- `citizenship` and `residence`
+    # above are documentation for you, never permissions the gate may infer
+    # from. With the list empty, a posting scoped to the EU or to a named
+    # country reports NEEDS_RESEARCH ("verify") rather than crediting a
+    # permission you never stated; with a list that excludes a place, that
+    # posting is a drop, on your terms. Country names and scopes are both
+    # accepted; matching is whole-word, so "us" never matches "Australia".
+    # Examples:
+    #   work_authorisation: ["eu"]               # any EU/EEA country, EMEA scope
+    #   work_authorisation: ["ireland", "usa"]   # named countries only
+    work_authorisation: []
+    effect: >-
+      What your citizenship SATISFIES: e.g. "authorised to work in the EU",
+      "EU-based candidates".
+    does_not_satisfy: >-
+      What it does NOT satisfy: citizenship does not satisfy "must RESIDE in
+      <country>". A role demanding residency becomes needs_research, never a
+      failure — an employer-of-record or relocation route may exist.
+  markets:
+    - "Local market"
+    - "Remote market you are eligible for"
+  # Places that count as YOUR market: a posting here is reported as "local
+  # market". Without this list nothing counts as local, and the gate falls back
+  # to the broader location rules instead of guessing where you live.
+  local_markets:
+    - "Your city"
+    - "Your country"
+  languages:
+    english: "primary; most target markets are English-tolerant"
+    # Add other languages you can actually work in. An essential requirement for
+    # a language NOT listed here is a hard failure, so keep this accurate.
+
+compensation:
+  # The gate NEVER auto-rejects on pay. This value ranks and flags only.
+  floor: "3,000 EUR NET per month — replace with your own absolute floor"
+  # The currency the floor is stated in. Also the currency the digest uses when
+  # it reports that a salary is below the floor.
+  currency: EUR
+  floor_basis: "NET (state it: net or gross changes everything)"
+  higher_is_better: true
+  written_target: "Optional: the range you would actually ask for"
+  status: resolved_for_ranking
+  note: >-
+    Compensation must NEVER auto-reject. A role below the floor is flagged so you
+    can see it; a role quoted in foreign currency is flagged needs_conversion
+    rather than converted at an invented exchange rate.
+
+outcomes:
+  strong_match: "Demonstrated experience clearly aligns with the core requirements."
+  potential_match: "Realistic opportunity with some transferable skills or learnable gaps."
+  needs_research: "Description incomplete or key information unverifiable."
+  not_suitable: "A confirmed essential requirement cannot be satisfied."
+
+per_job_explanation_required:
+  - "why the experience matches"
+  - "requirements demonstrably satisfied"
+  - "gaps, stated as gaps"
+
+mapping_to_m2:
+  strong_match: shortlist
+  potential_match: shortlist
+  needs_research: "manual review — never auto-reject"
+  not_suitable: "pass, only with the failed requirement quoted"
+
+objective: >-
+  What you are optimising for, in a sentence or two. This is for you, not the
+  gate.
+
+# The rule the whole pipeline is built around. Do not weaken it: an automated
+# system that can act on your behalf is a different risk class from one that
+# sorts and recommends.
+hard_rule: >-
+  NEVER send an application, contact an employer, or take any external action
+  without the owner's explicit per-job approval. Approval binds to one job id and
+  one action; it is never inferred from vague text and never generalised.

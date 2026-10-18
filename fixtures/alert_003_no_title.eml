@@ -1,0 +1,13 @@
+From: LinkedIn Job Alerts <jobalerts-noreply@linkedin.com>
+To: candidate@example.test
+Subject: A job you may like
+Message-ID: <alert-003@linkedin.com>
+Date: Tue, 13 Oct 2026 08:00:00 +0000
+MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
+
+<html><body>
+<p>Recommended for you</p>
+<p><a href="https://www.linkedin.com/comm/jobs/view/4012345777/?trackingId=eee"></a></p>
+<p><a href="https://www.linkedin.com/comm/jobs/view/4012345778/?trackingId=fff"></a></p>
+</body></html>

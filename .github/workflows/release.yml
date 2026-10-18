@@ -1,0 +1,48 @@
+name: release
+
+# Public-candidate release workflow.
+# PUBLISHING IS DISABLED. This workflow performs build and privacy
+# scanning only. No PyPI publish job, no OIDC permissions, no tag-push
+# triggers. Controlled publishing will be restored in a separate
+# owner-approved release PR after rights and publisher-separation
+# checks pass.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build sdist and wheel
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 -m pip install --quiet "build>=1.2"
+      - run: python3 -m build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  scan-sdist:
+    name: scan built artifacts for the production deny-list
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 -m pip install --quiet "PyYAML>=6.0"
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - run: python3 -m tools.scan_artifact dist/*.tar.gz dist/*.whl

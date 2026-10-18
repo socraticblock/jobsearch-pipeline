@@ -1,0 +1,146 @@
+name: release-privacy
+
+# W7.1 / I-19 -- CI release privacy gate.
+#
+# This action runs on every push and on every pull request into main.
+# It refuses the run if tools/verify.sh reports a leak, a missing
+# LICENSE, a synthetic-only violation, or a corpus-shape mismatch.
+#
+# The action does NOT publish anything on its own -- it only asserts
+# that the local verify chain agrees with CI. The actual public push
+# is owner-gated: an explicit yes from the human, not a green CI light.
+#
+# Why it exists: the W1.3 export gate is the local safeguard, but a
+# CI run on a clean machine is the second pair of eyes. A contributor
+# who is running on the owner's machine and accidentally has a token
+# file in the tree will fail the local check; a contributor who forks
+# the repo and never clones the owner's machine will fail CI.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: run tools/verify.sh
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install PyYAML (only runtime dep)
+        run: python3 -m pip install --quiet "PyYAML>=6.0" "reportlab>=4.0" "build>=1.2"
+
+      - name: run the full local verify
+        # tools/verify.sh runs the suite, the export gate, the leak
+        # scan, the synthetic-only check, the data-flow map check,
+        # and re-runs the suite from the export. A failure on any
+        # step fails the action.
+        run: bash tools/verify.sh
+
+  privacy:
+    name: leak scan on built tree
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: verify
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install PyYAML
+        run: python3 -m pip install --quiet "PyYAML>=6.0" "reportlab>=4.0"
+
+      - name: build the export (do NOT --allow-no-licence)
+        # The build fails if there is no LICENSE -- a build-time
+        # signal that the contributor has not yet made the licence
+        # decision.
+        run: |
+          python3 scripts/export_bundle.py --out /tmp/jobsearch-bundle 2>&1
+          if [ $? -ne 0 ]; then
+            echo "::error::export refused: licence missing or leak detected"
+            echo "::error::owner-gated decisions remain pending; see GOAL-AIRTIGHT.md"
+            exit 1
+          fi
+
+      - name: scan the built tree for deny-listed tokens
+        # Defence in depth: even if the export gate is bypassed (a
+        # future bug), a separate scan checks the BUILT tree, not the
+        # source tree. Anything that slipped through is caught here.
+        run: |
+          python3 -c "
+          import re, sys
+          from pathlib import Path
+          deny = [r'GIIP_[A-Za-z0-9_]+', r'ya29\.[A-Za-z0-9_-]+']
+          root = Path('/tmp/jobsearch-bundle')
+          hits = []
+          for p in root.rglob('*'):
+              if not p.is_file():
+                  continue
+              try:
+                  text = p.read_text(errors='ignore')
+              except OSError:
+                  continue
+              for d in deny:
+                  if re.search(d, text):
+                      hits.append((p, d))
+          if hits:
+              for p, d in hits:
+                  print(f'::error file={p}::deny-listed token {d!r} found in built tree')
+              sys.exit(1)
+          print('built tree is clean of deny-listed tokens')
+          "
+
+  sdist-leak-scan:
+    # CL-018 / W1.3: the actual published artifact (the sdist
+    # produced by `python -m build`) is scanned against the same
+    # deny-list the export gate uses. The export gate protects the
+    # curated bundle; this scan protects the PyPI-published sdist.
+    # They use the same source of truth (`scripts/export_bundle.py`).
+    name: scan the published sdist for deny-listed tokens
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: verify
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install build backend and runtime deps
+        run: python3 -m pip install --quiet "build>=1.2" "PyYAML>=6.0"
+
+      - name: build the sdist and wheel (matches release.yml)
+        run: |
+          python3 -m build --sdist --wheel
+          mkdir -p /tmp/sdist-scan
+          cp dist/*.tar.gz /tmp/sdist-scan/
+          cp dist/*.whl /tmp/sdist-scan/
+
+      - name: scan sdist and wheel for the production deny-list
+        # Uses the shared scanner (`tools/scan_artifact.py`)
+        # which is the same module the sdist-leak-scan test
+        # exercises. Single source of truth for the deny
+        # list; the test pins its detection; the workflow
+        # enforces it. Exits non-zero on any hit.
+        run: |
+          python3 -m tools.scan_artifact \
+            dist/*.tar.gz dist/*.whl

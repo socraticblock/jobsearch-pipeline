@@ -1,0 +1,13 @@
+From: Builder's Supply <orders@builders-supply.example>
+To: candidate@example.test
+Subject: Your order has shipped
+Message-ID: <personal-001@builders-supply.example>
+Date: Tue, 13 Oct 2026 09:00:00 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+Your order #4471 has shipped and will arrive on Thursday.
+
+Track it at https://builders-supply.example/track/4471
+
+Thanks for your business.

@@ -1,0 +1,731 @@
+[
+  {
+    "id": "c-001",
+    "rule": "years_bar_missing_evidence",
+    "expect": "needs_research",
+    "why": "a 5+ year demand with no flexibility, against a profile that has not set years_can_honestly_claim, must produce NEEDS_RESEARCH, not a verdict against the candidate (W3.1)",
+    "body": "Senior Platform Engineer. 5+ years of experience building distributed systems. Must have production Kubernetes experience.",
+    "title": "Senior Platform Engineer",
+    "years_can_honestly_claim": null,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": null
+    }
+  },
+  {
+    "id": "c-002",
+    "rule": "years_bar_strict_drop",
+    "expect": "not_suitable",
+    "why": "with years_can_honestly_claim set to 5, an 8+ year strict demand is a hard drop (W3.1, set branch)",
+    "body": "Senior Platform Engineer. 8+ years of experience required, building distributed systems. Production Kubernetes experience required.",
+    "title": "Senior Platform Engineer",
+    "years_can_honestly_claim": 3,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-003",
+    "rule": "years_bar_flexible_uncertain",
+    "expect": "needs_research",
+    "why": "a 3+ year demand with explicit flexibility wording is an uncertain signal, not a hard drop -- the candidate's equivalent experience may legitimately count, and the gate must surface this as NEEDS_RESEARCH (BR-007).",
+    "body": "Backend Engineer. 3+ years of relevant experience or equivalent combination of education and work.",
+    "title": "Backend Engineer",
+    "years_can_honestly_claim": 2,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-004",
+    "rule": "hard_avoid_by_title",
+    "expect": "not_suitable",
+    "why": "a title that names a hard-avoid role (e.g. devops-only) is a hard drop, irrespective of description content (see c-004).",
+    "body": "DevOps Engineer. We are looking for a DevOps engineer to manage our Kubernetes infrastructure and CI/CD pipelines. No application development work.",
+    "title": "DevOps Engineer",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-005",
+    "rule": "no_software_signal_in_title",
+    "expect": "not_suitable",
+    "why": "a title with no software signal (e.g. pure sales) is a hard drop -- the gate is for software roles (see c-005).",
+    "body": "Account Executive. Sell our enterprise SaaS platform to Fortune 500 buyers. Five years of quota-carrying sales experience required.",
+    "title": "Account Executive",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-006",
+    "rule": "empty_title_unknown",
+    "expect": "needs_research",
+    "why": "a posting with no title is not enough to evaluate -- must not hard-drop on missing data (see c-006).",
+    "body": "We are hiring for a new role. Strong technical background required. Competitive compensation. Remote.",
+    "title": "",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-007",
+    "rule": "language_unknown_not_dropped",
+    "expect": "needs_research",
+    "why": "an essential language the candidate has not listed is a missing-evidence case, not a fabricated verdict; the gate must surface the signal (W3.1 / Unknown policy)",
+    "body": "Senior Software Engineer. French required. 5 years of experience in Python and Django. Remote position based in Paris.",
+    "title": "Senior Software Engineer",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-008",
+    "rule": "description_too_short_uncertain",
+    "expect": "needs_research",
+    "why": "a posting with a 30-character description does not have enough signal to evaluate; the gate must not pretend to know (see c-008).",
+    "body": "Hiring.",
+    "title": "Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-009",
+    "rule": "local_market_satisfied",
+    "expect": "potential_match",
+    "why": "a posting in a city the candidate's profile lists as local_ok is a satisfied location signal; the gate produces potential_match because the technology match is one held item, not two (the strong_match bar)",
+    "body": "Senior Backend Engineer. 5+ years Python. Hybrid, 3 days a week in our Tbilisi office.",
+    "title": "Senior Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "local_ok": [
+      "tbilisi"
+    ],
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-010",
+    "rule": "non_eu_block_hard_drop",
+    "expect": "not_suitable",
+    "why": "a posting restricted to a country in NON_EU_BLOCK is a hard drop when the profile declares a work authorisation that excludes it -- the candidate cannot work from there on their own stated terms (see c-010). With nothing declared the same posting is needs_research (c-022), never an assumed rejection.",
+    "body": "Senior Backend Engineer. 5+ years Python. Must be authorized to work in the United States. Sponsorship not available.",
+    "title": "Senior Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5,
+      "work_authorisation": [
+        "eu"
+      ]
+    }
+  },
+  {
+    "id": "c-011",
+    "rule": "stack_missing_required",
+    "expect": "not_suitable",
+    "why": "a required technology the candidate does not list as known or learnable AND that is in the SPECIALIST_MUST_FAIL set is a hard drop with the missing tech quoted as evidence (W3.1, specialist branch)",
+    "body": "Backend Engineer. 5+ years of PHP experience required. We are maintaining a legacy WordPress installation and need someone who has worked with PHP and WordPress in production.",
+    "title": "Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go"
+      ],
+      "learnable_stack": [],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-012",
+    "rule": "stack_partial_learnable",
+    "expect": "potential_match",
+    "why": "a posting that explicitly invites adjacent-stack applicants and the candidate lists Go as learnable is a positive signal (potential_match), not a needs_research. The gate surfaces the signal; the candidate decides.",
+    "body": "Backend Engineer. 3+ years of Go experience preferred. Our team is migrating from Python to Go and we are open to strong engineers from adjacent stacks who want to learn.",
+    "title": "Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "learnable_stack": [
+      "go"
+    ],
+    "profile": {
+      "known_stack": [
+        "python"
+      ],
+      "learnable_stack": [
+        "go"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-013",
+    "rule": "salary_below_floor_soft_signal",
+    "expect": "potential_match",
+    "why": "a posting whose stated salary is below the candidate's floor is a soft negative; the gate surfaces it as potential_match so the candidate can decide (the policy is honest signal, not a fabricated verdict)",
+    "body": "Senior Backend Engineer. 5+ years Python. Remote. Salary range: 1500-2000 EUR per month.",
+    "title": "Senior Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "floor_net": 4000,
+    "floor_currency": "EUR",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-014",
+    "rule": "salary_unspecified_does_not_drop",
+    "expect": "potential_match",
+    "why": "a posting with no salary stated produces potential_match because the gate's surface logic does not classify absence of salary as a special case; the candidate decides from context.",
+    "body": "Senior Backend Engineer. 5+ years Python. Remote. Competitive compensation based on experience.",
+    "title": "Senior Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "floor_net": 4000,
+    "floor_currency": "EUR",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-015",
+    "rule": "agency_intermediary_soft_signal",
+    "expect": "potential_match",
+    "why": "a posting routed through a recruitment agency is a soft positive signal: the actual employer is unnamed but the role is real, and the gate should surface it with the agency noted so the candidate knows to ask who the employer is. NOTE: the gate has no agency-routing check today -- the `rule_why.WHY['agency_intermediary_soft_signal']` entry documents the surface behaviour, but the rule is aspirational, see test_rule_name_verdict_agreement.py::test_every_aspirational_rule_fixture_is_documented_in_rule_why. (BR-equivalent of career-ops' agency confirmation gate; the W3.x I-15 deferral.) The verdict `potential_match` here comes from the other rules (years, stack, location), not from an agency branch.",
+    "body": "Our client, a leading financial services firm, is hiring a Senior Backend Engineer. 5+ years Python. Hybrid, London.",
+    "title": "Senior Backend Engineer",
+    "years_can_honestly_claim": 5,
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-016",
+    "rule": "strong_match_perfect_fit",
+    "expect": "strong_match",
+    "why": "a posting whose every required dimension is met and whose at-least-two must-have technologies are in the candidate's known_stack is a strong match (W3.1, satisfied band). The strong_match verdict is the only verdict that is purely positive: the gate is confident the candidate is a good fit.",
+    "title": "Senior Backend Engineer",
+    "body": "Senior Backend Engineer. Must have 5+ years of experience. Python required. Django required. Postgres required. AWS required. Remote position. 5+ years professional experience required.",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-017",
+    "rule": "language_known_satisfied",
+    "expect": "strong_match",
+    "why": "a required language the candidate's profile lists as languages_usable is a satisfied signal, not an issue to surface; the language requirement is one the candidate already meets (W3.1, satisfied band). The c-007 fixture tests the negative branch (language unknown); this fixture tests the positive branch (language known).",
+    "title": "Senior Backend Engineer",
+    "body": "Senior Backend Engineer. English required. Python required. Django required. Postgres required. AWS required. 5+ years of experience required. Remote position based in Berlin.",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-018",
+    "rule": "local_market_satisfied",
+    "expect": "strong_match",
+    "why": "a posting in a city the candidate's profile lists as local_ok is a satisfied location signal (W3.1, satisfied band). The c-009 fixture uses potential_match because the tech match is one held item; this fixture produces strong_match because the candidate holds four must-have technologies and the location is local.",
+    "title": "Senior Backend Engineer",
+    "body": "Senior Backend Engineer. 5+ years of experience required. Python required. Django required. Postgres required. AWS required. Based in Tbilisi. 5+ years professional experience required.",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "tbilisi",
+        "berlin"
+      ],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  },
+  {
+    "id": "c-019",
+    "rule": "local_market_satisfied",
+    "expect": "strong_match",
+    "why": "a German title like 'Senior Softwareentwickler' is a satisfied software-role signal in a profile that lists German profession_signals (W3.4). Without the profile override, the gate's default English list would drop this title as no_software_signal_in_title, losing a real job for a non-English candidate. The body's evidence and the W3.2 quote contract still hold: the title IS the evidence and the body cites each required technology.",
+    "title": "Senior Softwareentwickler",
+    "body": "Senior Softwareentwickler. 5+ years of experience required. Python required. Django required. Postgres required. AWS required. Standort Berlin. 5+ years professional experience required.",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "berlin",
+        "tbilisi"
+      ],
+      "languages_usable": [
+        "german",
+        "english"
+      ],
+      "years_can_honestly_claim": 5,
+      "profession_signals": [
+        "ingenieur",
+        "entwickler",
+        "softwareentwickler",
+        "software"
+      ]
+    }
+  },
+  {
+    "id": "c-020",
+    "rule": "local_market_satisfied",
+    "expect": "strong_match",
+    "why": "a French title like 'D\u00e9veloppeur Back-End Confirm\u00e9' is a satisfied software-role signal in a profile that lists French profession_signals (W3.4). The default English list misses the non-ASCII 'd\u00e9veloppeur' token; a non-English candidate's profile must extend the vocabulary. This is the W3.4 contract: vocabulary is profile data, with a documented default.",
+    "title": "D\u00e9veloppeur Back-End Confirm\u00e9",
+    "body": "D\u00e9veloppeur Back-End Confirm\u00e9. 5+ years of experience required. Python required. Django required. Postgres required. AWS required. Paris. 5+ years professional experience required.",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "paris",
+        "berlin",
+        "tbilisi"
+      ],
+      "languages_usable": [
+        "french",
+        "english"
+      ],
+      "years_can_honestly_claim": 5,
+      "profession_signals": [
+        "d\u00e9veloppeur",
+        "ing\u00e9nieur",
+        "concepteur"
+      ]
+    }
+  },
+  {
+    "id": "c-021",
+    "rule": "no_software_signal_in_title",
+    "expect": "not_suitable",
+    "why": "a German non-software title like 'Senior Verk\u00e4ufer' is correctly rejected by a profile that lists German profession_signals (W3.4). Adding 'softwareentwickler' to the profile does not blanket-keep every German title; 'Verk\u00e4ufer' (salesperson) is not in the list, so the gate still drops it. The W3.4 contract: the extended vocabulary is a positive list, not a language whitelist.",
+    "title": "Senior Verk\u00e4ufer",
+    "body": "Senior Verk\u00e4ufer. 5+ years of quota-carrying sales experience required. Sell our enterprise SaaS platform to Fortune 500 buyers.",
+    "profile": {
+      "known_stack": [
+        "python",
+        "go",
+        "django",
+        "postgres",
+        "aws"
+      ],
+      "learnable_stack": [
+        "rust",
+        "elixir",
+        "kotlin"
+      ],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [
+        "berlin",
+        "tbilisi"
+      ],
+      "languages_usable": [
+        "german",
+        "english"
+      ],
+      "years_can_honestly_claim": 5,
+      "profession_signals": [
+        "ingenieur",
+        "entwickler",
+        "softwareentwickler",
+        "software"
+      ]
+    }
+  },
+  {
+    "id": "c-022",
+    "rule": "location_authorisation_missing_evidence",
+    "expect": "needs_research",
+    "why": "an EU-scope posting is not evidence of an EU work authorisation; with no work_authorisation declared in the profile the gate must report NEEDS_RESEARCH rather than credit a permission the candidate never stated (W3.1)",
+    "body": "Backend Engineer. Python and PostgreSQL. You must be authorised to work in the EU. English required. Remote (EU).",
+    "title": "Backend Engineer",
+    "profile": {
+      "known_stack": [
+        "python",
+        "postgres"
+      ],
+      "learnable_stack": [],
+      "floor_net": 4000,
+      "floor_currency": "EUR",
+      "local_ok": [],
+      "languages_usable": [
+        "english"
+      ],
+      "years_can_honestly_claim": 5
+    }
+  }
+]

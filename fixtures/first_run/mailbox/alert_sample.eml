@@ -1,0 +1,43 @@
+From: Sample Job Alerts <alerts@example.invalid>
+To: sample-candidate@example.invalid
+Subject: "Backend Engineer" jobs and 3 more
+Message-ID: <first-run-alert-001@example.invalid>
+Date: Wed, 14 Oct 2026 06:30:00 +0000
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="FRBOUND1"
+
+--FRBOUND1
+Content-Type: text/plain; charset="UTF-8"
+
+Backend Engineer
+Northwind Logistics · Riverton, Sampleland
+
+Analytics Engineer
+Contoso Retail Group · Remote (Germany)
+
+Senior PHP Developer
+Fabrikam Web Studio · Dublin, Ireland
+
+Platform Engineer
+Initech Cloud · Hybrid — Riverton, Sampleland
+
+View job: https://www.linkedin.com/comm/jobs/view/4012345701/?trackingId=fr001
+View job: https://www.linkedin.com/comm/jobs/view/4012345702/?trackingId=fr002
+View job: https://www.linkedin.com/comm/jobs/view/4012345703/?trackingId=fr003
+View job: https://www.linkedin.com/comm/jobs/view/4012345704/?trackingId=fr004
+
+--FRBOUND1
+Content-Type: text/html; charset="UTF-8"
+
+<html><body>
+<!-- SYNTHETIC ONLY: a hand-written sample alert. No real posting, employer,
+     person or address appears in this file, and no address here can resolve. -->
+<table>
+<tr><td><a href="https://www.linkedin.com/comm/jobs/view/4012345701/?trackingId=fr001">Backend Engineer</a></td><td>Northwind Logistics</td><td>Riverton, Sampleland</td></tr>
+<tr><td><a href="https://www.linkedin.com/comm/jobs/view/4012345702/?trackingId=fr002">Analytics Engineer</a></td><td>Contoso Retail Group</td><td>Remote (Germany)</td></tr>
+<tr><td><a href="https://www.linkedin.com/comm/jobs/view/4012345703/?trackingId=fr003">Senior PHP Developer</a></td><td>Fabrikam Web Studio</td><td>Dublin, Ireland</td></tr>
+<tr><td><a href="https://www.linkedin.com/comm/jobs/view/4012345704/?trackingId=fr004">Platform Engineer</a></td><td>Initech Cloud</td><td>Hybrid &mdash; Riverton, Sampleland</td></tr>
+</table>
+</body></html>
+
+--FRBOUND1--

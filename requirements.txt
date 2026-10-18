@@ -1,0 +1,13 @@
+# Only one non-stdlib dependency. Everything else is Python's standard library.
+# PyYAML reads the candidate profile; the ingestion, parsing, gating and digest
+# layers are stdlib-only by design, so the component that sits next to mail
+# credentials has the smallest practical audit surface.
+PyYAML>=6.0
+
+# Needed only for tools/google (read-only Gmail OAuth), pinned for the reason the
+# upstream skill pins them -- see tools/google/README.md.
+# google-api-python-client==2.194.0
+# google-auth==2.55.1
+# google-auth-oauthlib==1.3.1
+# google-auth-httplib2==0.3.1
+# httplib2==0.32.0

@@ -1,0 +1,90 @@
+From: LinkedIn Job Alerts <jobalerts-noreply@linkedin.com>
+To: candidate@example.com
+Subject: Your job alert for Software Engineer in Dublin, Ireland
+Message-ID: <card-layout-001@example.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============2872546993867598691=="
+
+--===============2872546993867598691==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Your job alert has been created: Software Engineer in Dublin, Ireland.
+
+You'll receive notifications when new jobs are posted that match your search =
+preferences.
+
+Senior Platform Engineer
+Northwind
+Remote
+Actively recruiting
+View job: https://www.linkedin.com/comm/jobs/view/4012346100?trackingId=3Dz
+
+---------------------------------------------------------
+
+Machine Learning Engineer
+Globex
+Dublin, Ireland
+This company is actively hiring
+View job: https://www.linkedin.com/comm/jobs/view/4012346101?trackingId=3Dz
+
+---------------------------------------------------------
+
+Backend Engineer, Go
+Initech
+Hybrid =E2=80=94 Dublin, Ireland
+Be an early applicant
+View job: https://www.linkedin.com/comm/jobs/view/4012346102?trackingId=3Dz
+
+---------------------------------------------------------
+
+--===============2872546993867598691==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><table><tbody><tr><td data-test-id=3D"job-card" style=3D"padding-=
+top: 24px;">
+ <table role=3D"presentation"><tbody><tr>
+  <td class=3D"pr-2 w-6"><a href=3D"https://www.linkedin.com/comm/jobs/view/4=
+012346100?trackingId=3Dx&amp;trk=3Dcompany_logo"><img src=3D"https://media.li=
+cdn.com/dms/logo" alt=3D"Northwind" width=3D"64" height=3D"64"></a></td>
+  <td><a href=3D"https://www.linkedin.com/comm/jobs/view/4012346100?trackingI=
+d=3Dy&amp;trk=3Djob_posting"><table><tbody><tr><td class=3D"pb-0.25"><a href=
+=3D"https://www.linkedin.com/comm/jobs/view/4012346100?trk=3Dtitle">Senior Pl=
+atform Engineer</a></td></tr></tbody></table></a>
+   <p style=3D"color: #666666;">Northwind &middot; Remote</p>
+   <p style=3D"color: #666666;">Actively recruiting</p>
+  </td>
+ </tr></tbody></table>
+</td><td data-test-id=3D"job-card" style=3D"padding-top: 24px;">
+ <table role=3D"presentation"><tbody><tr>
+  <td class=3D"pr-2 w-6"><a href=3D"https://www.linkedin.com/comm/jobs/view/4=
+012346101?trackingId=3Dx&amp;trk=3Dcompany_logo"><img src=3D"https://media.li=
+cdn.com/dms/logo" alt=3D"Globex" width=3D"64" height=3D"64"></a></td>
+  <td><a href=3D"https://www.linkedin.com/comm/jobs/view/4012346101?trackingI=
+d=3Dy&amp;trk=3Djob_posting"><table><tbody><tr><td class=3D"pb-0.25"><a href=
+=3D"https://www.linkedin.com/comm/jobs/view/4012346101?trk=3Dtitle">Machine L=
+earning Engineer</a></td></tr></tbody></table></a>
+   <p style=3D"color: #666666;">Globex &middot; Dublin, Ireland</p>
+   <p style=3D"color: #666666;">This company is actively hiring</p>
+  </td>
+ </tr></tbody></table>
+</td><td data-test-id=3D"job-card" style=3D"padding-top: 24px;">
+ <table role=3D"presentation"><tbody><tr>
+  <td class=3D"pr-2 w-6"><a href=3D"https://www.linkedin.com/comm/jobs/view/4=
+012346102?trackingId=3Dx&amp;trk=3Dcompany_logo"><img src=3D"https://media.li=
+cdn.com/dms/logo" alt=3D"Initech" width=3D"64" height=3D"64"></a></td>
+  <td><a href=3D"https://www.linkedin.com/comm/jobs/view/4012346102?trackingI=
+d=3Dy&amp;trk=3Djob_posting"><table><tbody><tr><td class=3D"pb-0.25"><a href=
+=3D"https://www.linkedin.com/comm/jobs/view/4012346102?trk=3Dtitle">Backend E=
+ngineer, Go</a></td></tr></tbody></table></a>
+   <p style=3D"color: #666666;">Initech &middot; Hybrid =E2=80=94 Dublin, Ire=
+land</p>
+   <p style=3D"color: #666666;">Be an early applicant</p>
+  </td>
+ </tr></tbody></table>
+</td></tr></tbody></table></body></html>
+
+--===============2872546993867598691==--

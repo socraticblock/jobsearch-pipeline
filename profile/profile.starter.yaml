@@ -1,0 +1,53 @@
+# profile.starter.yaml — the one-page starter profile.
+#
+# Copy this file to profile/profile.yaml, replace the values, and you are
+# running: these five fields are enough for the gate to work.
+# `profile.example.yaml` is the long-form reference -- read it once you want to
+# tune the vocabulary, the profession signals or the outcome wording.
+#
+#   cp profile/profile.starter.yaml profile/profile.yaml
+#   $EDITOR profile/profile.yaml
+#   python3 -m jobsearch.notify render --db var/jobs.db
+#
+# What happens if you leave a field out: the gate does not guess. The rule
+# that needed it reports NEEDS_RESEARCH and names the missing input, so an
+# empty field costs you a verdict, never a wrong one.
+
+# 1. Your stack. `status` decides what counts as HELD:
+#      corroborated | corroborated_weak | private_evidence  -> HELD
+#      learning | aspirational                              -> not held yet
+#    This one field decides most technology verdicts, so be honest in it.
+stack:
+  - skill: Python
+    status: corroborated
+  - skill: PostgreSQL
+    status: corroborated
+  - skill: React
+    status: learning
+
+# 2. Your pay floor. Ranks and flags only -- compensation NEVER rejects a job.
+#    State the currency explicitly, and whether it is net or gross.
+compensation:
+  floor: "6000 EUR"
+  currency: EUR
+  floor_basis: NET
+
+# 3. Where you are, and where you may legally work.
+location_and_arrangement:
+  # What makes a posting count as your own local market. Without it, nothing
+  # is local.
+  local_markets:
+    - "Your city"
+    - "Your country"
+  # Where you may legally work, written down. Nothing is inferred from
+  # citizenship or residence: with this list empty, a posting scoped to the EU
+  # (or to one country) reports NEEDS_RESEARCH -- "verify" -- rather than
+  # crediting a permission you never stated.
+  authorization:
+    work_authorisation:
+      - "eu"
+
+# 4. The years bar the gate may judge you against. Leave it out and a posting
+#    demanding "5+ years, no flexibility" becomes NEEDS_RESEARCH instead of a
+#    judgement -- the honest answer while you have not committed to a number.
+years_can_honestly_claim: 5

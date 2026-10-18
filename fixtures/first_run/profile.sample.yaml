@@ -1,0 +1,59 @@
+# SYNTHETIC ONLY — sample profile for the first-run walkthrough.
+#
+# This file is NOT a real candidate. Every value is invented so that
+# `tools/first_run.py` can show the gate judging postings without asking you
+# to fill in anything first. Replace it with your own profile when you are
+# ready -- `cp profile/profile.example.yaml profile/profile.yaml`.
+#
+# Five fields carry the gate:
+#
+#   stack[].status                  -> what counts as HELD
+#   compensation.floor              -> ranking and flagging only, never a rejection
+#   location_and_arrangement.local_markets -> what counts as your local market
+#   ...authorization.work_authorisation -> where you may legally work
+#   years_can_honestly_claim        -> the years bar the gate may judge against
+#
+# Delete any of them and the gate does not guess: it reports NEEDS_RESEARCH
+# and says which input was missing. That is the design, not a gap.
+
+stack:
+  - skill: Python
+    status: corroborated
+    evidence: "Sample value: a shipped project and client work."
+  - skill: PostgreSQL
+    status: corroborated
+    evidence: "Sample value."
+  - skill: Django
+    status: corroborated
+    evidence: "Sample value."
+  - skill: React
+    status: private_evidence
+    evidence: "Sample value: used in work that is not publicly demonstrable."
+  - skill: Go
+    status: learning
+    evidence: "Sample value: read and small tools, not production experience."
+
+target_titles:
+  tier1:
+    - "Backend Engineer"
+    - "Full-Stack Engineer"
+
+compensation:
+  floor: "6,000 EUR NET per month"
+  currency: EUR
+  floor_basis: "NET"
+
+location_and_arrangement:
+  local_markets:
+    - "Riverton"
+    - "Sampleland"
+  languages:
+    - english
+  # Declared, not inferred. Remove this block and the EU job below stops being
+  # satisfied: it becomes "location scope to verify", which is the honest
+  # answer when nobody has said where the candidate may work.
+  authorization:
+    work_authorisation:
+      - "eu"
+
+years_can_honestly_claim: 6

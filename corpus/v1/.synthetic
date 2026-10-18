@@ -1,0 +1,25 @@
+SYNTHETIC ONLY
+# This directory holds the labelled counterexample corpus (I-04) for
+# the deterministic gate. The pattern is borrowed from
+# inbox-job-tracker's tests/fixtures/emails.json -- a JSON array of
+# {id, rule, expect, why, body, title, ...} records, each one a
+# synthetic posting the gate should evaluate to `expect`.
+#
+# Every record's `why` field names the failure category. The
+# `rule` field maps to a key in jobsearch/rule_why.WHY. The
+# `expect` field is one of four verdict bands (snake_case,
+# matching the gate's constants in jobsearch.rules):
+#
+#   strong_match       -- all rules satisfied, perfect fit
+#   potential_match    -- all hard rules satisfied, soft signals differ
+#   needs_research     -- a hard rule is uncertain; not enough data
+#   not_suitable       -- a hard rule fails; the gate rejects
+#
+# The corpus is versioned by directory: v1, v2, ... A new version
+# is a new directory, not an in-place edit. v1 is the shipped set
+# (currently 21 fixtures); vN+1 is what a future contributor
+# would create to add coverage.
+#
+# No real posting, real employer, real recruiter, or real candidate
+# has ever been included here. Every record is synthetic, by
+# construction, by this marker.

@@ -1,0 +1,62 @@
+# SYNTHETIC ONLY — test fixture profile. The suite must not read the developer's
+#
+# The suite must not read the developer's own profile: a stranger running these
+# tests would otherwise fail on someone else's salary floor and someone else's
+# skill list, and would be tempted to "fix" the tests by editing their profile.
+# Tests read this file, which belongs to the tests, and nothing here is real.
+#
+# Floor 4,500 in the local currency, chosen so the existing amount-based
+# assertions keep their meaning: 3,000 is below it; 8,000 and 9,000 are above it.
+
+identity:
+  positioning: "Synthetic candidate for the test suite."
+  self_description: "Not a person. Exists so the tests do not depend on one."
+
+stack:
+  - skill: TypeScript
+    status: corroborated
+    evidence: "test fixture"
+  - skill: React
+    status: corroborated
+    evidence: "test fixture"
+  - skill: Node.js
+    status: corroborated
+    evidence: "test fixture"
+  - skill: API
+    status: corroborated
+    evidence: "test fixture"
+  - skill: PostgreSQL
+    status: private_evidence
+    evidence: "test fixture"
+  # Held deliberately: the AI-automation acceptance test asserts a STRONG match
+  # for a candidate who holds these, so the fixture must actually hold them.
+  # Without this the test would be asserting a fact about its author's profile.
+  - skill: LLM
+    status: corroborated
+    evidence: "test fixture"
+  - skill: Agent
+    status: corroborated
+    evidence: "test fixture"
+  - skill: Elixir
+    status: learning
+    evidence: "test fixture — must NOT count as held"
+
+location_and_arrangement:
+  local_markets:
+    - Exampleville
+  languages:
+    english: "fixture"
+    french: "fixture — a language the fixture candidate holds"
+  # The fixture candidate may work in the EU. Declared on purpose: the gate
+  # must satisfy an EU scope only from a declaration, so a test that asserts
+  # EU satisfaction has to declare it here. Delete this block and the EU
+  # tests must expect NEEDS_RESEARCH instead (test_rules covers both).
+  authorization:
+    work_authorisation:
+      - eu
+
+compensation:
+  floor: "4,500 EUR NET per month"
+  currency: EUR
+  floor_basis: "NET"
+  status: resolved_for_ranking
