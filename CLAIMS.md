@@ -416,7 +416,7 @@ string appears in HEAD, reachable history, stashes, or dangling objects.
 
 #### CL-005 — Current
 
-The shipped bundle is 150 files (the 141st is `tests/__init__.py`, an empty
+The shipped bundle is 149 files (the 141st is `tests/__init__.py`, an empty
 marker that lets the export gate's own test self-import work under the
 project's own `unittest discover` walker; the 142nd–144th are the
 `docs/README.md` and `docs/adr/000-template.md` Open-Ready scaffold files
