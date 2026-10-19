@@ -227,6 +227,7 @@ EXCLUDE = {
     # completeness check accepts them in the source tree without
     # shipping them in the curated bundle.
     "MANIFEST.in": "build-metadata file used by `python -m build`; not part of the curated public artifact",
+    "tests/test_installed_cli.py": "requires python -m build which is not available in the export bundle",
     "openready.project.json": "Open-Ready project contract; used by the openready CLI, not part of the curated public artifact",
 }
 # Files the source-completeness check must NOT flag. The source tree is
@@ -1108,9 +1109,10 @@ def build(args) -> int:
         r = subprocess.run(
             [sys.executable, "-m", "unittest", "discover", "-s", "tests"],
             cwd=out, capture_output=True, text=True,
+            env={"PYTHONPATH": str(out)},
         )
-        tail = (r.stdout + r.stderr).strip().splitlines()[-3:]
-        for line in tail:
+        output = (r.stdout + r.stderr).strip()
+        for line in output.splitlines():
             print(f"  {line}")
         if r.returncode != 0:
             print("FAILED: the export does not pass its own tests")
