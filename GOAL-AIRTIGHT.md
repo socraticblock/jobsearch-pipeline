@@ -251,7 +251,6 @@ recommendation.
 
 ## Owner decisions still open
 
-- Licence (and it must exist before any push — without one, "all rights reserved" is the default).
 - The number of years you can honestly claim, which unlocks W3.1.
 - Whether the cloud Worker ships at all, or stays undeployed.
 - Whether Telegram stays the delivery path — it is a third-party data path for Gmail-derived
