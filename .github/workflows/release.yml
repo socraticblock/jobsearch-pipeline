@@ -1,14 +1,18 @@
 name: release
 
 # Public-candidate release workflow.
-# PUBLISHING IS DISABLED. This workflow performs build and privacy
-# scanning only. No PyPI publish job, no OIDC permissions, no tag-push
-# triggers. Controlled publishing will be restored in a separate
-# owner-approved release PR after rights and publisher-separation
-# checks pass.
+#
+# PUBLISHING: enabled via PyPI Trusted Publishing (OIDC). No API tokens are
+# stored in GitHub. The PyPI project must list this repository/workflow as a
+# trusted publisher (Project -> Publishing -> Add a new publisher) before the
+# publish job can succeed. The publish job is gated on the `pypi` environment,
+# which can require manual approval in the repo's Environments settings.
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
@@ -46,3 +50,21 @@ jobs:
           name: dist
           path: dist/
       - run: python3 -m tools.scan_artifact dist/*.tar.gz dist/*.whl
+
+  publish:
+    name: publish to PyPI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build, scan-sdist]
+    environment:
+      name: pypi
+      url: https://pypi.org/project/jobsearch-pipeline/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
