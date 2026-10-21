@@ -10,3 +10,6 @@ digests/
 *.sqlite3
 .env
 dist/
+*.egg-info/
+build/
+.pytest_cache/

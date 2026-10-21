@@ -11,4 +11,4 @@ Design constraints:
 """
 
 __all__ = ["db", "normalize", "parse_alert", "ingest"]
-__version__ = "0.1.0"
+__version__ = "1.0.1"

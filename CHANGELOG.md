@@ -5,6 +5,34 @@ All notable changes to the jobsearch project. The format is based on
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 once a release tag is created.
 
+## [1.0.1] - 2026-10-21
+
+1.0.0 was tagged and published to PyPI on 2026-10-17 without a changelog cut;
+the detailed workstream record below is the 1.0.0 line and is left as written.
+
+### Fixed
+
+- **`jobsearch doctor` and `jobsearch first-run` crashed for anyone who
+  installed the package from PyPI.** The 1.0.0 code resolved both commands to
+  `tools/<tool>.py` relative to the installed package, where `tools/` does not
+  ship, so both raised `FileNotFoundError` instead of saying that they need a
+  repository checkout. Both now print the clone instructions and exit `2`.
+  Two regression tests build the wheel and the sdist, install each into an
+  isolated target directory, and assert the message rather than a traceback.
+- **`jobsearch.__version__` reported `0.1.0` while the distribution was at
+  1.0.0**, so an installed user would report a version the index never
+  published. It now matches `pyproject.toml`, and a test pins the two together.
+- The `first-run` message carried a `<repository-url>` placeholder; it now
+  names the public repository, as `doctor` already did.
+
+### Removed
+
+- `jobsearch_pipeline.egg-info/` (six build artifacts) was committed to the
+  tree; build output is not source. `.gitignore` now covers `*.egg-info/`,
+  `build/` and `.pytest_cache/`.
+- `openready.project.json`, an internal tool's project file that was published
+  carrying `"visibility": "PRIVATE"`.
+
 ## [Unreleased]
 
 ### Added

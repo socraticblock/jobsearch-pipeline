@@ -117,7 +117,7 @@ def main(argv: list[str] | None = None) -> int:
         if not (ROOT / "fixtures" / "first_run").is_dir():
             print("first-run needs the shipped sample data (fixtures/first_run/), which is",
                   "not included in the pip install. Clone the repository instead:",
-                  "  git clone <repository-url> && cd jobsearch",
+                  "  git clone https://github.com/socraticblock/jobsearch-pipeline.git && cd jobsearch-pipeline",
                   "  python3 tools/first_run.py", sep="\n", file=sys.stderr)
             return 2
         argv2 = []

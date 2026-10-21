@@ -1,4 +1,0 @@
-PyYAML>=6.0
-
-[pdf]
-reportlab>=4.0

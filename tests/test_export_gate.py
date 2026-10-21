@@ -1273,7 +1273,6 @@ class TestExcludeList(unittest.TestCase):
         ".gitignore": "the privacy guard, which makes no sense outside this workspace",
         "MANIFEST.in": "build-metadata file used by `python -m build`; not part of the curated public artifact",
         "tests/test_installed_cli.py": "requires python -m build which is not available in the export bundle",
-        "openready.project.json": "Open-Ready project contract; used by the openready CLI, not part of the curated public artifact",
     }
 
     def setUp(self):
