@@ -228,7 +228,6 @@ EXCLUDE = {
     # shipping them in the curated bundle.
     "MANIFEST.in": "build-metadata file used by `python -m build`; not part of the curated public artifact",
     "tests/test_installed_cli.py": "requires python -m build which is not available in the export bundle",
-    "openready.project.json": "Open-Ready project contract; used by the openready CLI, not part of the curated public artifact",
 }
 # Files the source-completeness check must NOT flag. The source tree is
 # allowed to contain these (they are owner data or host-only paths);

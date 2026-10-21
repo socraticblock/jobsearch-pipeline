@@ -416,12 +416,12 @@ string appears in HEAD, reachable history, stashes, or dangling objects.
 
 #### CL-005 — Current
 
-The shipped bundle is 149 files (the 141st is `tests/__init__.py`, an empty
+The shipped bundle is 150 files (it includes `tests/__init__.py`, an empty
 marker that lets the export gate's own test self-import work under the
-project's own `unittest discover` walker; the 142nd–144th are the
-`docs/README.md` and `docs/adr/000-template.md` Open-Ready scaffold files
-shipped alongside the tracked project documents via the `docs` directory
-allowlist), builds with no LLM dependency,
+project's own `unittest discover` walker, and the `docs/README.md` and
+`docs/adr/000-template.md` Open-Ready scaffold files shipped alongside the
+tracked project documents via the `docs` directory allowlist), builds with no
+LLM dependency,
 runs its own 576-test suite standalone from `dist/jobsearch-pipeline`, and is
 self-contained enough to be the public artifact a third party runs.
 

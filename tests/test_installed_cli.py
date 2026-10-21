@@ -120,6 +120,20 @@ class TestIsolatedInstall(unittest.TestCase):
         finally:
             self._cleanup(tmpdir)
 
+    def test_wheel_first_run_requires_checkout(self):
+        tmpdir, target = self._install(self.whl)
+        try:
+            result = self._run(target, "first-run")
+            self.assertEqual(
+                result.returncode, 2,
+                "first-run from a pip install must degrade, not crash:\n"
+                f"stdout={result.stdout}\nstderr={result.stderr}")
+            self.assertIn("fixtures/first_run", result.stderr)
+            self.assertIn("git clone", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+        finally:
+            self._cleanup(tmpdir)
+
     def test_sdist_help(self):
         tmpdir, target = self._install(self.sdist)
         try:
@@ -153,5 +167,19 @@ class TestIsolatedInstall(unittest.TestCase):
             result = self._run(target, "doctor")
             self.assertEqual(result.returncode, 2)
             self.assertIn("repository checkout", result.stderr)
+        finally:
+            self._cleanup(tmpdir)
+
+    def test_sdist_first_run_requires_checkout(self):
+        tmpdir, target = self._install(self.sdist)
+        try:
+            result = self._run(target, "first-run")
+            self.assertEqual(
+                result.returncode, 2,
+                "first-run from a pip install must degrade, not crash:\n"
+                f"stdout={result.stdout}\nstderr={result.stderr}")
+            self.assertIn("fixtures/first_run", result.stderr)
+            self.assertIn("git clone", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
         finally:
             self._cleanup(tmpdir)
