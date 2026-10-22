@@ -284,3 +284,7 @@ Extracted from a private working copy. `tools/google/setup.py` is a vendored cop
 of the `google-workspace` Hermes skill (MIT, Nous Research) with the scope list
 narrowed; the other files here were written for this project. `MANIFEST.txt` is no longer shipped; integrity is verified via
 the export gate and OpenReady scans.
+
+---
+
+More from me: **[socraticblock.com](https://www.socraticblock.com/)** — portfolio, case studies and engineering notes.
